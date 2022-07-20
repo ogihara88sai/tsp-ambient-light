@@ -36,7 +36,7 @@ readme_lines.forEach((line, i) => {
     return
   }
   if (line.match(/^!\[/)) {
-    ignore_flag = false
+    ignore_flag = true
     return
   }
   if (line.match(/^## /)) {

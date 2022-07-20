@@ -387,6 +387,12 @@
     if (!tag_name) {
       return
     }
+    if (!is_supported) {
+      return
+    }
+    if (!TG.ftag.master_tag[tag_name]) {
+      return
+    }
 
     // もともとのstartメソッドを保存
     const original_start = TG.ftag.master_tag[tag_name].start
@@ -469,6 +475,12 @@
     },
 
     start: async (pm) => {
+      // 非サポート環境では即nextOrder
+      if (!is_supported) {
+        TG.ftag.nextOrder()
+        return
+      }
+
       if (pm.storage) {
         const url = pm.storage.match(/^https?:\/\//)
           ? pm.storage
@@ -535,6 +547,12 @@
     },
 
     start: async (pm) => {
+      // 非サポート環境では即nextOrder
+      if (!is_supported) {
+        TG.ftag.nextOrder()
+        return
+      }
+
       // 環境光色を変換
       const color = pm.color === 'none' ? '#FFFFFF' : pm.color
       let ambient_rgb = parseRGB(color)
@@ -605,6 +623,12 @@
     },
 
     start: async (pm) => {
+      // 非サポート環境では即nextOrder
+      if (!is_supported) {
+        TG.ftag.nextOrder()
+        return
+      }
+
       const url = pm.storage.match(/^https?:\/\//)
         ? pm.storage
         : `./data/${pm.folder}/${pm.storage}`
@@ -625,6 +649,12 @@
     pm: {},
 
     start: async () => {
+      // 非サポート環境では即nextOrder
+      if (!is_supported) {
+        TG.ftag.nextOrder()
+        return
+      }
+
       restore()
       TG.ftag.nextOrder()
     },

@@ -5,8 +5,10 @@
 【開発環境】Windows 10 64bit OS  
 【製作者】荻原(おぎはら)  
 【連絡先】https://twitter.com/ogihara88sai  
-【バージョン】1.0.0  
-【最終更新日】2022.07.20 19:52:00  
+【バージョン】1.0.1  
+【最終更新日】2022.07.20 22:21:47  
+【動作デモ】https://ogihara88sai.github.io/tsp-ambient-light/latest/
+【ダウンロード】https://github.com/ogihara88sai/tsp-ambient-light/releases
 【ライセンス】MIT
 
 Copyright (c) 2022 荻原  
@@ -19,6 +21,8 @@ https://opensource.org/licenses/mit-license.php
 
 ![環境光プラグインのサンプル動画](./docs/example.webp)
 
+【注意】現在このプラグインは iOS、Mac 環境に対応していません。iOS、Mac 環境でこのプラグインを読み込んだ場合もシナリオは通常通り動作しますが、環境光の効果はなくなります。
+
 キャラに環境光を当てて背景に溶け込ませることができるプラグインです。
 
 `[bg]`タグに連動して自動で環境光が更新されます。（便利！）
@@ -28,8 +32,6 @@ https://opensource.org/licenses/mit-license.php
 ただし、`[bg]`以外のタグにも連動させたい場合や環境光の手動調整をおこないたい場合にはひと手間必要です。この説明書やサンプルシナリオを活用してカスタマイズにチャレンジしてみてください。
 
 バグ報告や機能要望については、Twitter の DM または GitHub の Issue にてお知らせくださいませ。
-
-動作デモ：https://ogihara88sai.github.io/tsp-ambient-light/latest/
 
 ---
 
@@ -181,5 +183,6 @@ name パラメータを指定することで現在画面上に出ているキャ
 
 - v1.0.1
 
-iOS および Mac のブラウザ環境ではこのプラグインの機能を無効化するように変更。環境光が当たらなくなるが、シナリオ自体は動作する。
+iOS および Mac のブラウザ環境ではこのプラグインの機能を無効化するように変更した。
 (iOS および Mac のブラウザがサポートしていない技術を使用しているため)
+環境光の効果はなくなるが、シナリオ自体は動作する。
