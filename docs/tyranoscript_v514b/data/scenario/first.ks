@@ -1,0 +1,1 @@
+[jump storage="../others/plugin/ambient_light/__example.ks"]
