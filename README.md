@@ -9,7 +9,7 @@
 【最終更新日】2022.07.20 19:52:00  
 【ライセンス】MIT
 
-Copyright (c) 2022 荻原
+Copyright (c) 2022 荻原  
 Released under the MIT license  
 https://opensource.org/licenses/mit-license.php
 
@@ -178,3 +178,8 @@ name パラメータを指定することで現在画面上に出ているキャ
 ### v1.0.0
 
 公開。
+
+- v1.0.1
+
+iOS および Mac のブラウザ環境ではこのプラグインの機能を無効化するように変更。環境光が当たらなくなるが、シナリオ自体は動作する。
+(iOS および Mac のブラウザがサポートしていない技術を使用しているため)

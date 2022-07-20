@@ -22,6 +22,38 @@
     storage_map: {},
   }
 
+  // OS
+  // mac, win, android, ios
+  const os = (() => {
+    if ($.isElectron()) {
+      if (process.platform == 'darwin') {
+        return 'mac'
+      } else {
+        return 'win'
+      }
+    } else {
+      const ua = window.navigator.userAgent.toLowerCase()
+      if (ua.includes('windows nt')) {
+        return 'win'
+      } else if (ua.includes('android')) {
+        return 'android'
+      } else if (ua.includes('iphone') || ua.includes('ipad')) {
+        return 'ios'
+      } else if (ua.includes('mac os x')) {
+        return 'mac'
+      } else {
+        return ''
+      }
+    }
+  })()
+
+  // サポートされているか
+  const is_supported =
+    TG.stat.mp.force === 'true' || $.isElectron() || os === 'win' || os === 'android'
+
+  // filterプロパティに当てるスタイル
+  const filter_value = is_supported ? 'url(#ambient_light_filter)' : ''
+
   // フィルターサイズ
   const filter_width = TG.stat.mp.width || '1000'
   const filter_height = TG.stat.mp.height || '2000'
@@ -70,7 +102,7 @@
   const j_style = $('<style id="ambient_light_style" />').appendTo('body')
   TG.stat.ambient_light_config.css_map = {
     '.tyrano_chara': {
-      filter: 'url(#ambient_light_filter)',
+      filter: filter_value,
     },
   }
 
@@ -163,7 +195,7 @@
     }
   }
 
-  const colorCache = {}
+  const color_cache = {}
 
   /**
    * Filterにセットしていく値をまとめたオプションを返す
@@ -181,11 +213,11 @@
     // eg.) [0.5, 0.66, 0.7]
     let rgb = config.ambient_rgb
     if (!rgb) {
-      if (colorCache[url]) {
-        rgb = colorCache[url]
+      if (color_cache[url]) {
+        rgb = color_cache[url]
       } else {
         rgb = await getRepresentativeColor(url)
-        colorCache[url] = rgb
+        color_cache[url] = rgb
       }
     }
 
@@ -409,7 +441,7 @@
       }
       if (pm.name) {
         TG.stat.ambient_light_config.css_map['.' + pm.name] = {
-          filter: 'url(#ambient_light_filter)',
+          filter: filter_value,
         }
         updateStyle()
       }
@@ -446,7 +478,7 @@
         updateSVGFilter(options)
       }
       if (pm.name) {
-        $('.' + pm.name).css('filter', 'url(#ambient_light_filter)')
+        $('.' + pm.name).css('filter', filter_value)
       }
       let options = {}
       if (pm.color) {
