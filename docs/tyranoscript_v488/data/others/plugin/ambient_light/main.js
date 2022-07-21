@@ -22,34 +22,28 @@
     storage_map: {},
   }
 
-  // OS
-  // mac, win, android, ios
-  const os = (() => {
-    if ($.isElectron()) {
-      if (process.platform == 'darwin') {
-        return 'mac'
-      } else {
-        return 'win'
-      }
-    } else {
-      const ua = window.navigator.userAgent.toLowerCase()
-      if (ua.includes('windows nt')) {
-        return 'win'
-      } else if (ua.includes('android')) {
-        return 'android'
-      } else if (ua.includes('iphone') || ua.includes('ipad')) {
-        return 'ios'
-      } else if (ua.includes('mac os x')) {
-        return 'mac'
-      } else {
-        return ''
-      }
-    }
-  })()
+  // 環境
+  // "iphone", "android", "pc"
+  const env = $.userenv()
+
+  // ブラウザ
+  // "chrome", "safari", "edge", "firefox", ...
+  const browser = $.getBrowser()
+
+  // プラグインがサポートされていない環境ならばtrue
+  // - Safari または iOS
+  const is_not_supported = browser === 'safari' || env === 'iphone'
+
+  // Nodeで駆動しているか
+  const is_node = ($.isElectron && $.isElectron()) || $.isNWJS()
 
   // サポートされているか
-  const is_supported =
-    TG.stat.mp.force === 'true' || $.isElectron() || os === 'win' || os === 'android'
+  // - iOS でも Safari でもない場合はOK（Mac × Electron、Mac × Chrome は OK）
+  // - Node.js 環境もOK
+  // - [plugin force="true"]で強制的に有効（デバッグ用）
+  const is_supported = !is_not_supported || is_node || TG.stat.mp.force === 'true'
+
+  alert({ browser, is_node, is_not_supported, is_supported })
 
   // filterプロパティに当てるスタイル
   const filter_value = is_supported ? 'url(#ambient_light_filter)' : ''
