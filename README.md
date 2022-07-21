@@ -5,8 +5,8 @@
 【開発環境】Windows 10 64bit OS  
 【製作者】荻原(おぎはら)  
 【連絡先】https://twitter.com/ogihara88sai  
-【バージョン】1.0.1  
-【最終更新日】2022.07.20 22:21:47  
+【バージョン】1.0.2  
+【最終更新日】2022.07.21 18:11:21  
 【動作デモ】https://ogihara88sai.github.io/tsp-ambient-light/latest/  
 【ダウンロード】https://github.com/ogihara88sai/tsp-ambient-light/releases  
 【ライセンス】MIT

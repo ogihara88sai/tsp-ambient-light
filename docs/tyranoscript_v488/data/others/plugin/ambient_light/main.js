@@ -22,6 +22,10 @@
     storage_map: {},
   }
 
+  //
+  // プラグインがサポートされているかどうかを確認
+  //
+
   // 環境
   // "iphone", "android", "pc"
   const env = $.userenv()
@@ -43,7 +47,9 @@
   // - [plugin force="true"]で強制的に有効（デバッグ用）
   const is_supported = !is_not_supported || is_node || TG.stat.mp.force === 'true'
 
-  alert({ browser, is_node, is_not_supported, is_supported })
+  //
+  // 初期化
+  //
 
   // filterプロパティに当てるスタイル
   const filter_value = is_supported ? 'url(#ambient_light_filter)' : ''
