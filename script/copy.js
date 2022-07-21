@@ -45,6 +45,9 @@ readme_lines.forEach((line, i) => {
   if (line.match(/^### /)) {
     line = line.replace(/^### /, '\n\n◆ ')
   }
+  if (line.match(/^#### /)) {
+    line = line.replace(/^#### /, '')
+  }
   if (line.match(/\| +パラメータ +\| +説明 +\|/)) {
     return
   }

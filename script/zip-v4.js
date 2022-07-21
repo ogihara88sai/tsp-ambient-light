@@ -10,7 +10,7 @@ const zipArchive = async (targetDir) => {
     zlib: { level: 9 },
   })
 
-  const dir = 'docs/latest/data/others/plugin/ambient_light'
+  const dir = 'docs/tyranoscript_v488/data/others/plugin/ambient_light'
 
   archive.pipe(output)
   archive.glob(`*.ks`, { cwd: dir }, { prefix: 'ambient_light' })
@@ -23,5 +23,5 @@ const zipArchive = async (targetDir) => {
 }
 
 ;(async () => {
-  await zipArchive(`ambient_light_v${pkg.version}`)
+  await zipArchive(`ambient_light_v${pkg.version}_for_TyranoV4`)
 })()
