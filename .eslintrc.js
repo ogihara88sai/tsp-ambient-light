@@ -10,6 +10,8 @@ module.exports = {
     jQuery: true,
     anime: true,
     html2canvas: true,
+    __dirname: true,
+    process: true,
   },
   extends: ['eslint:recommended'],
   parserOptions: {
