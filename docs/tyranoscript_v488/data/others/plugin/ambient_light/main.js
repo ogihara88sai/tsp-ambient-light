@@ -40,6 +40,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     default_shadow: true,
     default_shadow_size: 16,
     default_shadow_opacity: 0.3,
+    is_enabled: true,
     storage_map: {}
   }; //
   // プラグインがサポートされているかどうかを確認
@@ -72,7 +73,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
   var link_target_tag = TG.stat.mp.link || 'bg'; // SVG Filterの追加
 
-  var j_svg = $("<svg viewbox=\"0 0 0 0\" style=\"visible: hidden;\">\n    <defs>\n      <filter id=\"ambient_light_filter\" width=\"".concat(filter_width, "\" height=\"").concat(filter_height, "\">\n        <feFlood id=\"ambient_light_feflood\" flood-color=\"white\" flood-opacity=\"1\" />\n        <feComposite in=\"ambient_light_feflood\" in2=\"SourceAlpha\" operator=\"atop\" result=\"color_1\"/>\n        \n        <feFlood id=\"ambient_light_feflood_2\" flood-color=\"white\" flood-opacity=\"1\" />\n        <feComposite in=\"ambient_light_feflood_2\" in2=\"SourceAlpha\" operator=\"atop\" result=\"color_2\"/>\n      \n        <feBlend id=\"ambient_light_feblend_1\" in=\"color_1\" in2=\"SourceGraphic\" mode=\"multiply\" result=\"blend_main\"/>\n        <feBlend id=\"ambient_light_feblend_2\" in=\"color_2\" in2=\"SourceGraphic\" mode=\"hard-light\" result=\"blend_sub\"/>\n        <feComponentTransfer id=\"feComponentTransfer\" in=\"blend_sub\" result=\"blend_sub_alpha\">\n          <feFuncA id=\"ambient_light_alpha\" type=\"linear\" slope=\"0\"/>\n        </feComponentTransfer>\n        <feBlend in=\"blend_sub_alpha\" in2=\"blend_main\" mode=\"normal\"/>\n        <feDropShadow id=\"ambient_light_shadow\" dx=\"0\" dy=\"0\" stdDeviation=\"12\" flood-color=\"white\" flood-opacity=\"0\" />\n      </filter>\n    </defs>\n  </svg>")).appendTo('body'); // <feFlood>, <feBlend>, <feDropShadow>への参照
+  var j_svg = $("<svg viewbox=\"0 0 0 0\" style=\"visible: hidden;\">\n    <defs>\n      <filter id=\"ambient_light_filter\" width=\"".concat(filter_width, "\" height=\"").concat(filter_height, "\">\n\n        <feFlood id=\"ambient_light_feflood\" flood-color=\"white\" flood-opacity=\"1\" />\n        <feComposite in=\"ambient_light_feflood\" in2=\"SourceAlpha\" operator=\"atop\" result=\"color_1\"/>\n\n\n        <feFlood id=\"ambient_light_feflood_2\" flood-color=\"white\" flood-opacity=\"1\" />\n        <feComposite in=\"ambient_light_feflood_2\" in2=\"SourceAlpha\" operator=\"atop\" result=\"color_2\"/>\n\n        <feBlend id=\"ambient_light_feblend_1\" in=\"color_1\" in2=\"SourceGraphic\" mode=\"multiply\" result=\"blend_main\"/>\n        <feBlend id=\"ambient_light_feblend_2\" in=\"color_2\" in2=\"SourceGraphic\" mode=\"hard-light\" result=\"blend_sub\"/>\n        <feComponentTransfer id=\"feComponentTransfer\" in=\"blend_sub\" result=\"blend_sub_alpha\">\n          <feFuncA id=\"ambient_light_alpha\" type=\"linear\" slope=\"0\"/>\n        </feComponentTransfer>\n        <feBlend in=\"blend_sub_alpha\" in2=\"blend_main\" mode=\"normal\"/>\n        <feDropShadow id=\"ambient_light_shadow\" dx=\"0\" dy=\"0\" stdDeviation=\"12\" flood-color=\"white\" flood-opacity=\"0\" />\n\n      </filter>\n    </defs>\n  </svg>")).appendTo('body'); // <feFlood>, <feBlend>, <feDropShadow>への参照
 
   var e_flood_main = j_svg.find('#ambient_light_feflood').get(0);
   var e_flood_sub = j_svg.find('#ambient_light_feflood_2').get(0);
@@ -100,18 +101,20 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
   var updateStyle = function updateStyle() {
     var css_map = TG.stat.ambient_light_config.css_map;
-    var css_str = '';
+    var css_str = ''; // 有効な場合のみ。無効な場合はスタイルを空っぽにする
 
-    for (var selector in css_map) {
-      css_str += selector + '{';
-      var style_map = css_map[selector];
+    if (TG.stat.ambient_light_config.is_enabled) {
+      for (var selector in css_map) {
+        css_str += selector + '{';
+        var style_map = css_map[selector];
 
-      for (var prop in style_map) {
-        var value = style_map[prop];
-        css_str += "".concat(prop, ":").concat(value, ";");
+        for (var prop in style_map) {
+          var value = style_map[prop];
+          css_str += "".concat(prop, ":").concat(value, ";");
+        }
+
+        css_str += '}';
       }
-
-      css_str += '}';
     }
 
     j_style.text(css_str);
@@ -822,42 +825,42 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   TG.ftag.master_tag.ambient_light_restore = {
     kag: TG,
     pm: {},
-    start: function () {
-      var _start5 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee8() {
-        return _regeneratorRuntime().wrap(function _callee8$(_context8) {
-          while (1) {
-            switch (_context8.prev = _context8.next) {
-              case 0:
-                if (is_supported) {
-                  _context8.next = 3;
-                  break;
-                }
-
-                TG.ftag.nextOrder();
-                return _context8.abrupt("return");
-
-              case 3:
-                restore();
-                TG.ftag.nextOrder();
-
-              case 5:
-              case "end":
-                return _context8.stop();
-            }
-          }
-        }, _callee8);
-      }));
-
-      function start() {
-        return _start5.apply(this, arguments);
+    start: function start() {
+      // 非サポート環境では即nextOrder
+      if (!is_supported) {
+        TG.ftag.nextOrder();
+        return;
       }
 
-      return start;
-    }()
+      restore();
+      TG.ftag.nextOrder();
+    }
+  }; // ================================
+  // [ambient_light_on]タグ定義
+  // ================================
+
+  TG.ftag.master_tag.ambient_light_on = {
+    kag: TG,
+    start: function start() {
+      TG.stat.ambient_light_config.is_enabled = true;
+      restore();
+      TG.ftag.nextOrder();
+    }
+  }; // ================================
+  // [ambient_light_off]タグ定義
+  // ================================
+
+  TG.ftag.master_tag.ambient_light_off = {
+    kag: TG,
+    start: function start() {
+      TG.stat.ambient_light_config.is_enabled = false;
+      restore();
+      TG.ftag.nextOrder();
+    }
   }; // TYRANO.kag.onが使えるなら使おう
 
   if (TG.on !== undefined) {
-    TG.on('load:complete', function () {
+    TG.on('load-beforemaking', function () {
       restore();
     });
   }

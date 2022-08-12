@@ -19,6 +19,7 @@
     default_shadow: true,
     default_shadow_size: 16,
     default_shadow_opacity: 0.3,
+    is_enabled: true,
     storage_map: {},
   }
 
@@ -65,12 +66,14 @@
   const j_svg = $(`<svg viewbox="0 0 0 0" style="visible: hidden;">
     <defs>
       <filter id="ambient_light_filter" width="${filter_width}" height="${filter_height}">
+
         <feFlood id="ambient_light_feflood" flood-color="white" flood-opacity="1" />
         <feComposite in="ambient_light_feflood" in2="SourceAlpha" operator="atop" result="color_1"/>
-        
+
+
         <feFlood id="ambient_light_feflood_2" flood-color="white" flood-opacity="1" />
         <feComposite in="ambient_light_feflood_2" in2="SourceAlpha" operator="atop" result="color_2"/>
-      
+
         <feBlend id="ambient_light_feblend_1" in="color_1" in2="SourceGraphic" mode="multiply" result="blend_main"/>
         <feBlend id="ambient_light_feblend_2" in="color_2" in2="SourceGraphic" mode="hard-light" result="blend_sub"/>
         <feComponentTransfer id="feComponentTransfer" in="blend_sub" result="blend_sub_alpha">
@@ -78,6 +81,7 @@
         </feComponentTransfer>
         <feBlend in="blend_sub_alpha" in2="blend_main" mode="normal"/>
         <feDropShadow id="ambient_light_shadow" dx="0" dy="0" stdDeviation="12" flood-color="white" flood-opacity="0" />
+
       </filter>
     </defs>
   </svg>`).appendTo('body')
@@ -112,14 +116,17 @@
   const updateStyle = () => {
     const css_map = TG.stat.ambient_light_config.css_map
     let css_str = ''
-    for (const selector in css_map) {
-      css_str += selector + '{'
-      const style_map = css_map[selector]
-      for (const prop in style_map) {
-        const value = style_map[prop]
-        css_str += `${prop}:${value};`
+    // 有効な場合のみ。無効な場合はスタイルを空っぽにする
+    if (TG.stat.ambient_light_config.is_enabled) {
+      for (const selector in css_map) {
+        css_str += selector + '{'
+        const style_map = css_map[selector]
+        for (const prop in style_map) {
+          const value = style_map[prop]
+          css_str += `${prop}:${value};`
+        }
+        css_str += '}'
       }
-      css_str += '}'
     }
     j_style.text(css_str)
   }
@@ -648,7 +655,7 @@
 
     pm: {},
 
-    start: async () => {
+    start: () => {
       // 非サポート環境では即nextOrder
       if (!is_supported) {
         TG.ftag.nextOrder()
@@ -660,9 +667,37 @@
     },
   }
 
+  // ================================
+  // [ambient_light_on]タグ定義
+  // ================================
+
+  TG.ftag.master_tag.ambient_light_on = {
+    kag: TG,
+
+    start: () => {
+      TG.stat.ambient_light_config.is_enabled = true
+      restore()
+      TG.ftag.nextOrder()
+    },
+  }
+
+  // ================================
+  // [ambient_light_off]タグ定義
+  // ================================
+
+  TG.ftag.master_tag.ambient_light_off = {
+    kag: TG,
+
+    start: () => {
+      TG.stat.ambient_light_config.is_enabled = false
+      restore()
+      TG.ftag.nextOrder()
+    },
+  }
+
   // TYRANO.kag.onが使えるなら使おう
   if (TG.on !== undefined) {
-    TG.on('load:complete', () => {
+    TG.on('load-beforemaking', () => {
       restore()
     })
   }
